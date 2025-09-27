@@ -1,20 +1,20 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center py-12 px-4" style="background: linear-gradient(135deg, #0d000a 0%, #2d1b23 50%, #0d000a 100%);">
+  <div class="min-h-screen flex items-center justify-center py-12" style="background: linear-gradient(135deg, #0d000a 0%, #2d1b23 50%, #0d000a 100%);">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
       <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, #fedd00 2px, transparent 2px), radial-gradient(circle at 75% 75%, #fedd00 2px, transparent 2px); background-size: 60px 60px;"></div>
     </div>
 
     <!-- Signup Container -->
-    <div class="relative w-full max-w-md mx-2 sm:mx-auto">
+    <div class="relative w-full max-w-4xl sm:mx-auto">
       <!-- Signup Card -->
-      <div class="backdrop-blur-sm border border-opacity-20 rounded-md shadow-xl overflow-hidden" 
+      <div class="backdrop-blur-sm border border-opacity-20 rounded-md overflow-hidden" 
            style="background-color: rgba(243, 242, 242, 0.95); border-color: rgba(254, 221, 0, 0.3); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
         
         <!-- Header Section -->
         <div class="px-8 pt-8 pb-6 text-center">
           <!-- Logo/Brand -->
-          <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center" 
+          <div class="w-20 h-20 mx-auto mb-6 rounded-md flex items-center justify-center" 
                style="background: linear-gradient(135deg, #fedd00 0%, #f4d03f 100%); box-shadow: 0 10px 25px rgba(254, 221, 0, 0.3);">
             <i class="pi pi-user-plus text-3xl" style="color: #0d000a; font-weight: bold;"></i>
           </div>
@@ -38,7 +38,7 @@
                   v-model="signupForm.email"
                   type="email"
                   placeholder="Enter your email address"
-                  class="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12"
+                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12"
                   style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 16px;"
                   :class="{ 'border-red-400': emailError }"
                   @focus="handleInputFocus"
@@ -79,14 +79,15 @@
                 <input 
                   v-model="signupForm.phone"
                   type="tel"
-                  placeholder="50 123 4567"
-                  class="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                  style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 16px; padding-left: 100px;"
+                  placeholder="050 123 4567"
+                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                  style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 
+                  16px; padding-left: 100px;"
                   :class="{ 'border-red-400': phoneError }"
                   @focus="handleInputFocus"
                   @blur="handleInputBlur"
                   @input="formatPhoneNumber"
-                  maxlength="11"
+                  maxlength="12"
                   required
                 />
                 <div v-if="isValidPhone && signupForm.phone" class="absolute right-4 top-1/2 transform -translate-y-1/2">
@@ -96,7 +97,7 @@
               <div class="flex items-start space-x-2 text-xs opacity-60" style="color: #0d000a;">
                 <i class="pi pi-info-circle mt-0.5"></i>
                 <div>
-                  <p class="font-medium">Ghana mobile formats supported:</p>
+                  <p class="font-medium">Supported formats:</p>
                   <p>• MTN: 024, 054, 055, 059</p>
                   <p>• Vodafone: 020, 050</p>
                   <p>• AirtelTigo: 027, 057, 026, 056</p>
@@ -116,7 +117,7 @@
                   v-model="signupForm.password"
                   :type="showPassword ? 'text' : 'password'"
                   placeholder="Create a strong password"
-                  class="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12 pr-12"
+                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12 pr-12"
                   style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 16px;"
                   :class="{ 'border-red-400': passwordError }"
                   @focus="handleInputFocus"
@@ -163,7 +164,7 @@
                   required
                 />
                 <div class="relative mt-1">
-                  <div class="w-5 h-5 rounded border-2 transition-all duration-200 group-hover:border-opacity-60"
+                  <div class="w-5 h-5 rounded border-1 transition-all duration-200 group-hover:border-opacity-60"
                        :style="{
                          backgroundColor: signupForm.acceptTerms ? '#fedd00' : 'transparent',
                          borderColor: signupForm.acceptTerms ? '#fedd00' : 'rgba(13, 0, 10, 0.3)'
@@ -180,28 +181,6 @@
                   <button type="button" @click="openPrivacyPolicy" class="font-semibold hover:underline" style="color: #fedd00;">Privacy Policy</button>
                 </div>
               </label>
-
-              <label class="flex items-start cursor-pointer group">
-                <input 
-                  v-model="signupForm.subscribeNewsletter"
-                  type="checkbox" 
-                  class="sr-only"
-                />
-                <div class="relative mt-1">
-                  <div class="w-5 h-5 rounded border-2 transition-all duration-200 group-hover:border-opacity-60"
-                       :style="{
-                         backgroundColor: signupForm.subscribeNewsletter ? '#fedd00' : 'transparent',
-                         borderColor: signupForm.subscribeNewsletter ? '#fedd00' : 'rgba(13, 0, 10, 0.3)'
-                       }">
-                    <i v-if="signupForm.subscribeNewsletter" 
-                       class="pi pi-check absolute inset-0 flex items-center justify-center text-xs" 
-                       style="color: #0d000a; font-weight: bold;"></i>
-                  </div>
-                </div>
-                <span class="ml-3 text-sm font-medium" style="color: #0d000a;">
-                  Subscribe to our newsletter for exclusive offers and updates
-                </span>
-              </label>
             </div>
 
             <!-- Signup Button -->
@@ -209,7 +188,7 @@
               <button 
                 type="submit"
                 :disabled="!canSignup || isLoading"
-                class="w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
+                class="w-full py-4 rounded-md font-bold text-lg tracking-wide transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
                 :style="{
                   backgroundColor: canSignup && !isLoading ? '#fedd00' : 'rgba(254, 221, 0, 0.3)',
                   color: '#0d000a',
@@ -229,7 +208,7 @@
             </div>
 
             <!-- Error Message -->
-            <div v-if="signupError" class="mt-4 p-4 rounded-xl border border-red-200" 
+            <div v-if="signupError" class="mt-4 p-4 rounded-md border border-red-200" 
                  style="background-color: rgba(239, 68, 68, 0.1);">
               <div class="flex items-center">
                 <i class="pi pi-exclamation-triangle text-red-600 mr-3"></i>
@@ -328,6 +307,11 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from "vue-router"
+import apiClient from "../api/axios"
+
+
+const router = useRouter()
 
 // Reactive data
 const signupForm = ref({
@@ -345,7 +329,7 @@ const showSuccessModal = ref(false)
 
 // Ghana mobile network prefixes
 const ghanaPrefixes = [
-  '024', '054', '055', '059', // MTN
+  '024', '054', '055', '059', '053',// MTN
   '020', '050', // Vodafone
   '027', '057', '026', '056'  // AirtelTigo
 ]
@@ -360,8 +344,8 @@ const isValidPhone = computed(() => {
   // Remove all non-digits
   const cleanPhone = signupForm.value.phone.replace(/\D/g, '')
   
-  // Check if it's 9 digits and starts with valid Ghana prefix
-  if (cleanPhone.length === 9) {
+  // Check if it's 10 digits and starts with valid Ghana prefix
+  if (cleanPhone.length === 10) {
     const prefix = cleanPhone.substring(0, 3)
     return ghanaPrefixes.includes(prefix)
   }
@@ -382,12 +366,12 @@ const phoneError = computed(() => {
     
     if (cleanPhone.length === 0) return ''
     
-    if (cleanPhone.length < 9) {
-      return 'Phone number must be 9 digits'
+    if (cleanPhone.length < 10) {
+      return 'Phone number must be 10 digits'
     }
     
-    if (cleanPhone.length > 9) {
-      return 'Phone number cannot exceed 9 digits'
+    if (cleanPhone.length > 10) {
+      return 'Phone number cannot exceed 10 digits'
     }
     
     const prefix = cleanPhone.substring(0, 3)
@@ -454,22 +438,31 @@ const canSignup = computed(() => {
 
 // Methods
 const formatPhoneNumber = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
+  let value = event.target.value.replace(/\D/g, '') // Remove non-digits
   
-  // Limit to 9 digits
-  if (value.length > 9) {
-    value = value.substring(0, 9)
+  // Limit to 10 digits
+  if (value.length > 10) {
+    value = value.substring(0, 10)
   }
   
   // Format as XX XXX XXXX
+  let formattedValue = ''
   if (value.length >= 6) {
-    value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5)
+    formattedValue = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5)
   } else if (value.length >= 3) {
-    value = value.substring(0, 2) + ' ' + value.substring(2)
+    formattedValue = value.substring(0, 2) + ' ' + value.substring(2)
+  } else {
+    formattedValue = value
   }
   
-  signupForm.value.phone = value
+  // Set the display value with formatting
+  event.target.value = formattedValue
+  
+  // Set form value without spaces (stripped)
+  signupForm.value.phone = value // This is the clean digits-only version
 }
+
+
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
@@ -492,25 +485,41 @@ const handleSignup = async () => {
   signupError.value = ''
   
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2500))
+        
+       const data = {
+        "email": signupForm.value.email,
+        "phone": signupForm.value.phone,
+        "password": signupForm.value.password,
+        "user_type": "regular"
+       }
+
+       const response = await apiClient.post("/users/auth/signup/email", data)
     
-    // Format phone number for API
-    const cleanPhone = signupForm.value.phone.replace(/\D/g, '')
-    const fullPhoneNumber = '+233' + cleanPhone
+    // console.log('Signup data:', {
+    //   email: signupForm.value.email,
+    //   phone: fullPhoneNumber,
+    //   password: signupForm.value.password,
+    //   newsletter: signupForm.value.subscribeNewsletter
+    // })
     
-    console.log('Signup data:', {
-      email: signupForm.value.email,
-      phone: fullPhoneNumber,
-      password: signupForm.value.password,
-      newsletter: signupForm.value.subscribeNewsletter
-    })
-    
-    // Simulate success
-    showSuccessModal.value = true
+    if(response.status == 200){
+      showSuccessModal.value = true;
+      window.location.replace('/')
+    }
+ 
     
   } catch (error) {
-    signupError.value = error.message || 'Account creation failed. Please try again.'
+    if(error.response){
+         switch(error.response.status){
+          case 409:
+            signupError.value = "An account with this email already exists."
+            break
+         }
+    }else if(error.request){
+      signupError.value = "Failed to connect to server. Please try again later."
+    }else{
+      signupError.value = error.message || 'Account creation failed. Please try again.'
+    }
   } finally {
     isLoading.value = false
   }
@@ -525,7 +534,7 @@ const handleFacebookSignup = () => {
 }
 
 const handleLogin = () => {
-  alert('Redirect to login page')
+   router.push('/auth/login')
 }
 
 const openPrivacyPolicy = () => {

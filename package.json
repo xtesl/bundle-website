@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@paystack/inline-js": "^2.22.2",
     "@tailwindcss/vite": "^4.1.13",
+    "axios": "^1.12.1",
     "pinia": "^3.0.3",
     "primeicons": "^7.0.0",
     "tailwindcss": "^4.1.13",

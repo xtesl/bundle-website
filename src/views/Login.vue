@@ -7,15 +7,15 @@
     </div>
 
     <!-- Login Container -->
-    <div class="relative w-full pt-4 max-w-md mx-2 sm:mx-auto">
+    <div class="relative w-full pt-4 max-w-md mx-1 sm:mx-auto">
       <!-- Login Card -->
-      <div class="backdrop-blur-sm border border-opacity-20 rounded-md shadow-xl overflow-hidden" 
+      <div class="backdrop-blur-sm border border-opacity-20 rounded-md overflow-hidden" 
            style="background-color: rgba(243, 242, 242, 0.95); border-color: rgba(254, 221, 0, 0.3); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
         
         <!-- Header Section -->
         <div class="px-8 pt-8 pb-6 text-center">
           <!-- Logo/Brand -->
-          <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center" 
+          <div class="w-20 h-20 mx-auto mb-6 rounded-md flex items-center justify-center" 
                style="background: linear-gradient(135deg, #fedd00 0%, #f4d03f 100%); box-shadow: 0 10px 25px rgba(254, 221, 0, 0.3);">
             <i class="pi pi-user text-3xl" style="color: #0d000a; font-weight: bold;"></i>
           </div>
@@ -39,7 +39,7 @@
                   v-model="loginForm.email"
                   type="email"
                   placeholder="Enter your email address"
-                  class="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12"
+                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12"
                   style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 16px;"
                   :class="{ 'border-red-400': emailError }"
                   @focus="handleInputFocus"
@@ -67,7 +67,7 @@
                   v-model="loginForm.password"
                   :type="showPassword ? 'text' : 'password'"
                   placeholder="Enter your password"
-                  class="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12 pr-12"
+                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 pl-12 pr-12"
                   style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 16px;"
                   :class="{ 'border-red-400': passwordError }"
                   @focus="handleInputFocus"
@@ -127,7 +127,8 @@
               <button 
                 type="submit"
                 :disabled="!canLogin || isLoading"
-                class="w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
+                class="w-full py-4 rounded-md font-bold text-lg tracking-wide transition-all duration-200 flex items-center 
+                justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
                 :style="{
                   backgroundColor: canLogin && !isLoading ? '#fedd00' : 'rgba(254, 221, 0, 0.3)',
                   color: '#0d000a',
@@ -147,7 +148,7 @@
             </div>
 
             <!-- Error Message -->
-            <div v-if="loginError" class="mt-4 p-4 rounded-xl border border-red-200" 
+            <div v-if="loginError" class="mt-4 p-4 rounded-md border border-red-200" 
                  style="background-color: rgba(239, 68, 68, 0.1);">
               <div class="flex items-center">
                 <i class="pi pi-exclamation-triangle text-red-600 mr-3"></i>
@@ -246,6 +247,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import apiClient from '../api/axios'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Reactive data
 const loginForm = ref({
@@ -309,18 +314,33 @@ const handleLogin = async () => {
   loginError.value = ''
   
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
+      const data = {
+        "email": loginForm.value.email,
+        "password": loginForm.value.password
+      }
+    
+    const response = await apiClient.post("/users/auth/login/email", 
+      data
+    )
     
     // Simulate login success/failure
-    if (loginForm.value.email === 'user@example.com' && loginForm.value.password === 'password123') {
+    if (response.status == 200) {
       showSuccessModal.value = true
-    } else {
-      throw new Error('Invalid email or password')
-    }
-    
+      window.location.replace('/')
+
+    } 
   } catch (error) {
+    if(error.response){
+          switch(error.response.status){
+            case 401:
+               loginError.value = "Invalid credentials"
+              break;
+          }
+    }else if(error.request){
+      loginError.value = 'Failed to connect to the server. Please try again later.'
+    }else{
     loginError.value = error.message || 'Login failed. Please try again.'
+    }
   } finally {
     isLoading.value = false
   }
@@ -339,7 +359,7 @@ const handleFacebookLogin = () => {
 }
 
 const handleSignUp = () => {
-  alert('Sign up page would open here')
+  router.push("/auth/register")
 }
 
 const openPrivacyPolicy = () => {
