@@ -56,55 +56,7 @@
             </div>
 
             <!-- Phone Number Field (Ghana Only) -->
-            <div class="space-y-2">
-              <label class="block text-sm font-semibold tracking-wide" style="color: #0d000a; font-weight: 600;">
-                <i class="pi pi-phone mr-2" style="color: #fedd00;"></i>
-                Phone Number
-                <span class="text-xs opacity-60 font-normal ml-1">(Ghana only)</span>
-              </label>
-              <div class="relative">
-                <!-- Country Code Prefix -->
-                <div class="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center">
-                  <div class="flex items-center">
-                    <!-- Ghana Flag -->
-                    <div class="w-6 h-4 rounded-sm mr-2 overflow-hidden" 
-                         style="background: linear-gradient(to right, #ce1126 0%, #ce1126 33%, #fcd116 33%, #fcd116 66%, #006b3f 66%, #006b3f 100%); border: 1px solid rgba(0,0,0,0.1);">
-                      <div class="w-2 h-2 bg-black rounded-full mx-auto mt-0.5" style="width: 4px; height: 4px;"></div>
-                    </div>
-                    <span class="text-sm font-medium opacity-70" style="color: #0d000a;">+233</span>
-                    <div class="w-px h-4 mx-2 opacity-30" style="background-color: #0d000a;"></div>
-                  </div>
-                </div>
-                
-                <input 
-                  v-model="signupForm.phone"
-                  type="tel"
-                  placeholder="050 123 4567"
-                  class="w-full px-4 py-4 rounded-md border-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                  style="background-color: rgba(243, 242, 242, 0.8); border-color: rgba(13, 0, 10, 0.1); color: #0d000a; font-size: 
-                  16px; padding-left: 100px;"
-                  :class="{ 'border-red-400': phoneError }"
-                  @focus="handleInputFocus"
-                  @blur="handleInputBlur"
-                  @input="formatPhoneNumber"
-                  maxlength="12"
-                  required
-                />
-                <div v-if="isValidPhone && signupForm.phone" class="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <i class="pi pi-check-circle text-green-500 text-lg"></i>
-                </div>
-              </div>
-              <div class="flex items-start space-x-2 text-xs opacity-60" style="color: #0d000a;">
-                <i class="pi pi-info-circle mt-0.5"></i>
-                <div>
-                  <p class="font-medium">Supported formats:</p>
-                  <p>• MTN: 024, 054, 055, 059</p>
-                  <p>• Vodafone: 020, 050</p>
-                  <p>• AirtelTigo: 027, 057, 026, 056</p>
-                </div>
-              </div>
-              <p v-if="phoneError" class="text-sm text-red-500 font-medium">{{ phoneError }}</p>
-            </div>
+           
 
             <!-- Password Field -->
             <div class="space-y-2">
@@ -217,7 +169,7 @@
             </div>
 
             <!-- Social Signup Options -->
-            <div class="relative mt-8">
+            <!-- <div class="relative mt-8">
               <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-opacity-20" style="border-color: #0d000a;"></div>
               </div>
@@ -240,7 +192,7 @@
                 <span class="text-sm">Google</span>
               </button>
             
-            </div>
+            </div> -->
           </form>
         </div>
       </div>
@@ -275,7 +227,7 @@
           </button>
         </div>
         <p class="text-xs opacity-50" style="color: rgba(243, 242, 242, 0.8);">
-          © 2025 DataBundle. All rights reserved.
+          © 2025 KingdomDataGh. All rights reserved.
         </p>
       </div>
     </div>
@@ -294,11 +246,11 @@
           <p class="text-sm opacity-70 mb-6 font-medium" style="color: #0d000a;">
             Welcome to DataBundle! Your account has been successfully created.
           </p>
-          <button @click="closeSuccessModal" 
+          <!-- <button @click="closeSuccessModal" 
                   class="w-full py-3 rounded-xl font-bold tracking-wide hover:scale-105 transition-all duration-200"
                   style="background-color: #fedd00; color: #0d000a; box-shadow: 0 10px 25px rgba(254, 221, 0, 0.3);">
             Continue to Dashboard
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -309,6 +261,8 @@
 import { ref, computed } from 'vue'
 import { useRouter } from "vue-router"
 import apiClient from "../api/axios"
+
+
 
 
 const router = useRouter()
@@ -328,11 +282,7 @@ const signupError = ref('')
 const showSuccessModal = ref(false)
 
 // Ghana mobile network prefixes
-const ghanaPrefixes = [
-  '024', '054', '055', '059', '053',// MTN
-  '020', '050', // Vodafone
-  '027', '057', '026', '056'  // AirtelTigo
-]
+
 
 // Computed properties
 const isValidEmail = computed(() => {
@@ -340,47 +290,9 @@ const isValidEmail = computed(() => {
   return emailRegex.test(signupForm.value.email)
 })
 
-const isValidPhone = computed(() => {
-  // Remove all non-digits
-  const cleanPhone = signupForm.value.phone.replace(/\D/g, '')
-  
-  // Check if it's 10 digits and starts with valid Ghana prefix
-  if (cleanPhone.length === 10) {
-    const prefix = cleanPhone.substring(0, 3)
-    return ghanaPrefixes.includes(prefix)
-  }
-  
-  return false
-})
 
-const emailError = computed(() => {
-  if (signupForm.value.email && !isValidEmail.value) {
-    return 'Please enter a valid email address'
-  }
-  return ''
-})
 
-const phoneError = computed(() => {
-  if (signupForm.value.phone) {
-    const cleanPhone = signupForm.value.phone.replace(/\D/g, '')
-    
-    if (cleanPhone.length === 0) return ''
-    
-    if (cleanPhone.length < 10) {
-      return 'Phone number must be 10 digits'
-    }
-    
-    if (cleanPhone.length > 10) {
-      return 'Phone number cannot exceed 10 digits'
-    }
-    
-    const prefix = cleanPhone.substring(0, 3)
-    if (!ghanaPrefixes.includes(prefix)) {
-      return 'Please enter a valid Ghana mobile number'
-    }
-  }
-  return ''
-})
+
 
 const passwordError = computed(() => {
   if (signupForm.value.password && signupForm.value.password.length < 8) {
@@ -427,40 +339,14 @@ const passwordStrengthColor = computed(() => {
 
 const canSignup = computed(() => {
   return signupForm.value.email && 
-         signupForm.value.phone &&
          signupForm.value.password && 
          isValidEmail.value && 
-         isValidPhone.value &&
          passwordStrength.value >= 3 &&
          signupForm.value.acceptTerms &&
          !isLoading.value
 })
 
-// Methods
-const formatPhoneNumber = (event) => {
-  let value = event.target.value.replace(/\D/g, '') // Remove non-digits
-  
-  // Limit to 10 digits
-  if (value.length > 10) {
-    value = value.substring(0, 10)
-  }
-  
-  // Format as XX XXX XXXX
-  let formattedValue = ''
-  if (value.length >= 6) {
-    formattedValue = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5)
-  } else if (value.length >= 3) {
-    formattedValue = value.substring(0, 2) + ' ' + value.substring(2)
-  } else {
-    formattedValue = value
-  }
-  
-  // Set the display value with formatting
-  event.target.value = formattedValue
-  
-  // Set form value without spaces (stripped)
-  signupForm.value.phone = value // This is the clean digits-only version
-}
+
 
 
 
@@ -486,21 +372,14 @@ const handleSignup = async () => {
   
   try {
         
-       const data = {
+
+     const data = {
         "email": signupForm.value.email,
-        "phone": signupForm.value.phone,
         "password": signupForm.value.password,
-        "user_type": "regular"
        }
 
        const response = await apiClient.post("/users/auth/signup/email", data)
     
-    // console.log('Signup data:', {
-    //   email: signupForm.value.email,
-    //   phone: fullPhoneNumber,
-    //   password: signupForm.value.password,
-    //   newsletter: signupForm.value.subscribeNewsletter
-    // })
     
     if(response.status == 200){
       showSuccessModal.value = true;
@@ -526,12 +405,9 @@ const handleSignup = async () => {
 }
 
 const handleGoogleSignup = () => {
-  alert('Google signup would be implemented here')
+
 }
 
-const handleFacebookSignup = () => {
-  alert('Facebook signup would be implemented here')
-}
 
 const handleLogin = () => {
    router.push('/auth/login')
@@ -548,7 +424,6 @@ const openTermsOfService = () => {
 const closeSuccessModal = () => {
   showSuccessModal.value = false
   // Redirect to dashboard or login
-  alert('Redirecting to login or dashboard...')
 }
 </script>
 

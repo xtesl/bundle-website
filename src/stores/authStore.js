@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
           
         const response = await apiClient.get("/users/");
          if (response.status == 200) {
-          this.userType = response.data.user_type
+          this.userType = response.data.role
           this.userData = response.data
           this.isAuthenticated = true;
         }
