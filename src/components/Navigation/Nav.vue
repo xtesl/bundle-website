@@ -172,14 +172,14 @@
           <i class="pi pi-users mr-3 text-base"></i>
           <span>Join Agent Group</span>
         </a>
-        <a href="/auth/register-agent/" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+        <RouterLink to="/auth/register-agent" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated && userType == 'regular'">
           <i class="pi pi-briefcase mr-3 text-base"></i>
           <span>Become an Agent</span>
-      </a>
+      </RouterLink>
 
         <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
@@ -190,13 +190,13 @@
           <span>My Account</span>
         </a>
 
-        <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+        <!-- <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'">
           <i class="pi pi-question-circle mr-3 text-base"></i>
           <span>How To Buy</span>
-        </a>
+        </a> -->
       </div>
 
       <!-- Mobile Wallet & User Section -->
