@@ -7,7 +7,7 @@
         <div class="flex items-center">
           <div class="flex-shrink-0 flex items-center">
             <h1 class="text-xl font-bold tracking-tight" style="color: #fedd00;">
-              Rich Data Hub
+              KingdomDataGh
             </h1>
           </div>
         </div>
@@ -15,16 +15,6 @@
         <!-- Desktop Navigation -->
         <div class="hidden xl:flex xl:items-center xl:space-x-1">
         
-
-          <!-- Other Navigation Items -->
-           <a href="/" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
-             style="color: #f3f2f2;"
-             @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
-             @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             >
-            <i class="pi pi-home mr-2 text-base"></i>
-            <span>Home</span>
-          </a>
           <RouterLink to="/user/orders" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
@@ -33,23 +23,24 @@
             <i class="pi pi-list mr-2 text-base"></i>
             <span>My Orders</span>
         </RouterLink>
-        <RouterLink to="/admin/dashboard" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
-             style="color: #f3f2f2;"
-             @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
-             @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             v-if="isAuthenticated && userType == 'admin'">
-            <i class="pi pi-desktop mr-2 text-base"></i>
-            <span>Dashboard</span>
-        </RouterLink>
-
-          <a href="/" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+         <RouterLink to="/transactions" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
              v-if="isAuthenticated">
-            <i class="pi pi-credit-card mr-2 text-base"></i>
-            <span>Wallet Topup</span>
-          </a>
+            <i class="pi pi-receipt mr-2 text-base"></i>
+            <span>Transactions</span>
+        </RouterLink>
+        <RouterLink to="/admin/dashboard" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+             style="color: #f3f2f2;"
+             @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
+             @mouseout="$event.target.style.backgroundColor = 'transparent'"
+             v-if="isAuthenticated && userType != 'regular'">
+            <i class="pi pi-desktop mr-2 text-base"></i>
+            <span>Dashboard</span>
+        </RouterLink>
+
+          
 
           <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
@@ -59,46 +50,46 @@
             <i class="pi pi-users mr-2 text-base"></i>
             <span>Join Agent Group</span>
           </a>
-          <a href="/auth/register-agent/" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <RouterLink to="/auth/register-agent" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             v-if="isAuthenticated && userType === 'regular'">
+             v-if="isAuthenticated && userType == 'regular'">
             <i class="pi pi-briefcase mr-2 text-base"></i>
             <span>Become an Agent</span>
-          </a>
+        </RouterLink>
 
 
-          <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <RouterLink to="/user/profile" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             v-if="isAuthenticated && userType == 'o-'">
+             v-if="isAuthenticated">
             <i class="pi pi-user-edit mr-2 text-base"></i>
             <span>My Account</span>
-          </a>
+      </RouterLink>
 
-          <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <!-- <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'">
             <i class="pi pi-question-circle mr-2 text-base"></i>
             <span>How To Buy</span>
-          </a>
+          </a> -->
         </div>
 
         <!-- Wallet & User Section -->
         <div class="hidden xl:flex xl:items-center xl:space-x-4">
-          <!-- Wallet Display -->
-          <div class="flex items-center rounded-sm px-4 py-1 border-opacity-20" 
+        
+          <!-- <div class="flex items-center rounded-sm px-4 py-1 border-opacity-20" 
                style="background-color: rgba(243, 242, 242, 0.95); border-color: #fedd00;"
                v-if="isAuthenticated">
             <i class="pi pi-wallet mr-3 text-base" style="color: #fedd00;"></i>
             <div class="flex flex-col">
               <span class="text-xs font-semibold uppercase tracking-wider opacity-70" style="color: #0d000a;">My Wallet</span>
-              <span class="text-sm font-bold" style="color: #0d000a;"> GH₵{{ userData.account_balance.toLocaleString() }}</span>
+              <span class="text-sm font-bold" style="color: #0d000a;"> GH₵ {{ wallet?.balance }}</span> 
             </div>
-          </div>
+          </div> -->
 
           <!-- Logout -->
           <button class="flex items-center px-4 py-1 text-sm font-medium rounded-md transition-all duration-200
@@ -144,16 +135,8 @@
          style="background-color: #0d000a; border-color: rgba(254, 221, 0, 0.2);">
       <div class="pt-2 pb-3 space-y-1">
 
-        <!-- Mobile Navigation Links -->
-         <a href="/" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
-           style="color: #f3f2f2;"
-           @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
-           @mouseout="$event.target.style.backgroundColor = 'transparent'"
-           >
-          <i class="pi pi-home mr-3 text-base"></i>
-          <span>Home</span>
-      </a>
-        <RouterLink to="/user/orders" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+    
+       <RouterLink to="/user/orders" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
@@ -161,15 +144,25 @@
           <i class="pi pi-list mr-3 text-base"></i>
           <span>My Orders</span>
       </RouterLink>
-
-        <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+      <RouterLink to="/transactions" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated">
-          <i class="pi pi-credit-card mr-3 text-base"></i>
-          <span>Wallet Topup</span>
-        </a>
+          <i class="pi pi-receipt mr-3 text-base"></i>
+          <span>Transactions</span>
+      </RouterLink>
+
+      <RouterLink to="/admin/dashboard" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+           style="color: #f3f2f2;"
+           @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
+           @mouseout="$event.target.style.backgroundColor = 'transparent'"
+           v-if="isAuthenticated && userType != 'regular'">
+          <i class="pi pi-desktop mr-2 text-base"></i>
+          <span>Dashboard</span>
+    </RouterLink>
+
+       
 
         <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
@@ -192,7 +185,7 @@
            style="color: #f3f2f2;"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
-           v-if="isAutheticated && userType == 'o-'">
+           v-if="isAuthenticated">
           <i class="pi pi-user-edit mr-3 text-base"></i>
           <span>My Account</span>
         </a>
@@ -210,17 +203,17 @@
       <div class="pt-4 pb-3 border-t" style="border-color: rgba(254, 221, 0, 0.2);"
       >
         <!-- Mobile Wallet -->
-        <div class="flex items-center justify-between px-4 py-3 mx-4 rounded-sm border-opacity-30" 
+        <!-- <div class="flex items-center justify-between px-4 py-3 mx-4 rounded-sm border-opacity-30" 
              style="background-color: rgba(243, 242, 242, 0.95); border-color: #fedd00;"
              v-if="isAuthenticated">
           <div class="flex items-center">
             <i class="pi pi-wallet mr-3 text-lg" style="color: #fedd00;"></i>
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider opacity-70" style="color: #0d000a;">My Wallet</p>
-              <p class="text-lg font-bold" style="color: #0d000a;"> GH₵{{ userData.account_balance.toLocaleString() }}</p>
+              <p class="text-lg font-bold" style="color: #0d000a;"> GH₵{{ userData.account_balance.toLocaleString() }}</p> 
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Mobile Logout -->
         <div class="mt-3 px-2" 
@@ -253,18 +246,23 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useAuthStore } from '../../stores/authStore'
+import { useRouter } from "vue-router"
+
+
+const router = useRouter()
+
+
 
 // Reactive state
 const dropdownOpen = ref(false)
 const mobileMenuOpen = ref(false)
 const mobileDropdownOpen = ref(false)
-const walletBalance = ref(25750.50)
 
 const authStore = useAuthStore()
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isInitialized = computed(() => authStore.isInitialized);
-const userType = computed(() => authStore.userType || "regular");
+const userType = computed(() =>  authStore.userType);
 const userData = computed(() => authStore.userData)
 
 // Methods
@@ -285,7 +283,13 @@ const toggleMobileMenu = () => {
 }
 
 const onLogout = async () => {
-        await authStore.logout();
+  try{
+    await authStore.logout()
+    router.push('/auth/login')
+  }catch(err){
+    //  console.log(err)
+  }
+     
 }
 
 const toggleMobileDropdown = () => {

@@ -157,7 +157,7 @@
             </div>
 
             <!-- Social Login Options -->
-            <div class="relative mt-8">
+            <!-- <div class="relative mt-8">
               <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-opacity-20" style="border-color: #0d000a;"></div>
               </div>
@@ -166,9 +166,9 @@
                   Or continue with
                 </span>
               </div>
-            </div>
+            </div> -->
 
-            <div class="grid grid-cols-1 gap-4 mt-6">
+            <!-- <div class="grid grid-cols-1 gap-4 mt-6">
               <button 
                 type="button"
                 @click="handleGoogleLogin"
@@ -180,7 +180,7 @@
                 <span class="text-sm">Google</span>
               </button>
               
-            </div>
+            </div> -->
           </form>
         </div>
       </div>
@@ -215,7 +215,7 @@
           </button>
         </div>
         <p class="text-xs opacity-50" style="color: rgba(243, 242, 242, 0.8);">
-          © 2025 DataBundle. All rights reserved.
+          © 2025 KingdomDataGh. All rights reserved.
         </p>
       </div>
     </div>
@@ -249,8 +249,13 @@
 import { ref, computed } from 'vue'
 import apiClient from '../api/axios'
 import { useRouter } from 'vue-router'
+import { useSupabaseAuth } from '../composables/useSupabaseAuth'
 
-const router = useRouter()
+const router = useRouter();
+
+const { signIn, user,  loading} = useSupabaseAuth();
+
+
 
 // Reactive data
 const loginForm = ref({
@@ -314,7 +319,7 @@ const handleLogin = async () => {
   loginError.value = ''
   
   try {
-      const data = {
+     const data = {
         "email": loginForm.value.email,
         "password": loginForm.value.password
       }
@@ -323,7 +328,6 @@ const handleLogin = async () => {
       data
     )
     
-    // Simulate login success/failure
     if (response.status == 200) {
       showSuccessModal.value = true
       window.location.replace('/')
