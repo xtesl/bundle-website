@@ -22,8 +22,8 @@ const routes = [
     meta: { requiresGuest: true }
   },
   {
-    path: '/storeFront/:slug',
-    name: 'storeFront',
+    path: '/storefront/:slug',
+    name: 'storefront',
     component: () => import('../views/AgentStoreFront.vue')
   },
   {
