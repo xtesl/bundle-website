@@ -249,11 +249,11 @@
 import { ref, computed } from 'vue'
 import apiClient from '../api/axios'
 import { useRouter } from 'vue-router'
-import { useSupabaseAuth } from '../composables/useSupabaseAuth'
+
 
 const router = useRouter();
 
-const { signIn, user,  loading} = useSupabaseAuth();
+
 
 
 

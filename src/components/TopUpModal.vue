@@ -116,7 +116,6 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { supabase } from '../lib/supabase'
 import apiClient from "../api/axios"
 import PaystackPop from '@paystack/inline-js'
 
@@ -188,7 +187,6 @@ const handleTopUp = async () => {
   isLoading.value = true;
   try{
       
-    console.log(totalAmount.value)
      const response = await apiClient.post("/payments/initialize",
           {
             "amount": totalAmount.value,
@@ -201,7 +199,7 @@ const handleTopUp = async () => {
        }
 
   }catch(error){
-    console.log(error)
+    // console.log(error)
   }finally{
 
    isLoading.value = false;
