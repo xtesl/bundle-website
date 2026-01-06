@@ -138,6 +138,7 @@
     
        <RouterLink to="/user/orders" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated">
@@ -146,6 +147,7 @@
       </RouterLink>
       <RouterLink to="/transactions" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated">
@@ -155,6 +157,7 @@
 
       <RouterLink to="/admin/dashboard" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated && userType != 'regular'">
@@ -166,6 +169,7 @@
 
         <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated && userType == 'agent'">
@@ -174,6 +178,7 @@
         </a>
         <RouterLink to="/auth/register-agent" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated && userType == 'regular'">
@@ -183,6 +188,7 @@
 
         <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
            v-if="isAuthenticated">
@@ -231,6 +237,7 @@
         v-else>
           <RouterLink href="#" class="flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors duration-200" 
              style="color: #f3f2f2;"
+             @click="toggleMobileMenu"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
              to="/auth/login">

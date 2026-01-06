@@ -43,7 +43,7 @@
               :class="amount === quickAmount ? 'bg-yellow-400 text-slate-900 border-yellow-400' : 'bg-white text-slate-700 border-slate-300 hover:border-yellow-400'"
               class="py-3 px-4 rounded-lg border-2 font-semibold transition"
             >
-              {{ quickAmount }} GH₵
+              GH₵ {{ quickAmount }} 
             </button>
           </div>
         </div>
@@ -69,23 +69,23 @@
             />
           </div>
           <p v-if="amountError" class="text-sm text-red-500 mt-2">{{ amountError }}</p>
-          <p v-else class="text-xs text-slate-500 mt-2">Minimum amount: 10 GH₵</p>
+          <p v-else class="text-xs text-slate-500 mt-2">Minimum amount: GH₵ 10</p>
         </div>
 
         <!-- Summary Card -->
         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm text-slate-600">Amount</span>
-            <span class="text-lg font-bold text-slate-900">{{ amount || 0 }} GH₵</span>
+            <span class="text-lg font-bold text-slate-900">GH₵ {{ amount || 0 }} </span>
           </div>
-          <div class="flex items-center justify-between mb-2">
+          <!-- <div class="flex items-center justify-between mb-2">
             <span class="text-sm text-slate-600">Processing Fee</span>
-            <span class="text-sm font-semibold text-slate-700">{{ processingFee }} GH₵</span>
-          </div>
+            <span class="text-sm font-semibold text-slate-700">GH₵ {{ processingFee }} </span>
+          </div> -->
           <div class="h-px bg-slate-300 my-3"></div>
           <div class="flex items-center justify-between">
             <span class="text-base font-semibold text-slate-900">Total</span>
-            <span class="text-2xl font-bold text-yellow-600">{{ totalAmount }} GH₵</span>
+            <span class="text-2xl font-bold text-yellow-600">GH₵ {{ totalAmount }} </span>
           </div>
         </div>
 
@@ -140,14 +140,14 @@ const isLoading = ref(false)
 const quickAmounts = [10, 20, 50, 100, 200, 500]
 
 // Computed
-const processingFee = computed(() => {
-  if (!amount.value) return 0
-  return (amount.value * 0.015).toFixed(2) // 1.5% fee
-})
+// const processingFee = computed(() => {
+//   if (!amount.value) return 0
+//   return (amount.value * 0.015).toFixed(2) // 1.5% fee
+// })
 
 const totalAmount = computed(() => {
   if (!amount.value) return 0
-  return (parseFloat(amount.value) + parseFloat(processingFee.value)).toFixed(2)
+  return (parseFloat(amount.value)).toFixed(2)
 })
 
 const canProceed = computed(() => {
