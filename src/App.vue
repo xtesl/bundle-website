@@ -7,7 +7,7 @@ import WhatsAppButton from './components/WhatsAppButton.vue'
 const route = useRoute()
 
 
-const hideNavbarRoutes = ['login', 'register', 'register-agent']
+const hideNavbarRoutes = ['login', 'register', 'register-agent', "AdminDashboard"]
 
 onMounted(() => {
 
@@ -19,7 +19,7 @@ onMounted(() => {
 
   <router-view />
  <WhatsAppButton 
-      phone-number="23356373440"
+      phone-number="233537204692"
       message="Hello!"
       :show-pulse="true"
     />

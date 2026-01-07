@@ -177,7 +177,7 @@
                   <input 
                     v-model="beneficiaryNumber"
                     type="tel"
-                    placeholder="Enter phone number (e.g., 0201234567)"
+                    placeholder="Enter phone number (e.g., 0554238777)"
                     class="w-full px-4 py-3 rounded-md border border-opacity-20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:border-opacity-60"
                     style="background-color: #f3f2f2; border-color: #0d000a; color: #0d000a;"
                     :style="{

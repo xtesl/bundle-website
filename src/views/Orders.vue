@@ -29,7 +29,7 @@
           <i class="pi pi-info-circle text-blue-500 mt-0.5 mr-3"></i>
           <div class="flex-1">
             <h3 class="text-sm font-medium text-blue-900 mb-1">Order Taking Too Long?</h3>
-            <p class="text-sm text-blue-700">If your order is pending for more than 5 minutes, please use the "Report Issue" button to contact support via WhatsApp.</p>
+            <p class="text-sm text-blue-700">If your order is deliverd but till not received, please use the "Report Issue" button to contact support via WhatsApp.</p>
           </div>
         </div>
       </div>

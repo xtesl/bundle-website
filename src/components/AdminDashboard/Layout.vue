@@ -1,31 +1,32 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Top Navigation -->
-    <nav class="bg-gray-900 border-b border-yellow-400 sticky top-0 z-50 shadow-lg">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <button 
-              @click="toggleSidebar" 
-              class="lg:hidden mr-4 text-yellow-400 hover:text-yellow-300 p-2"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <h1 class="text-xl font-bold text-yellow-400">Admin Control</h1>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 rounded-full bg-yellow-400 text-gray-900 flex items-center justify-center">
-                <span class="text-sm font-bold">A</span>
-              </div>
-              <span class="hidden sm:block text-sm font-medium text-gray-200">Admin User</span>
-            </div>
-          </div>
+   <nav class="bg-gray-900 border-b border-yellow-400 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <button 
+            @click="toggleSidebar" 
+            class="lg:hidden mr-4 text-yellow-400 hover:text-yellow-300 p-2"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 class="text-xl font-bold text-yellow-400">Admin Control</h1>
+        </div>
+        <div class="flex items-center">
+          <button 
+            @click="goHome"
+            class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+          >
+            <i class="pi pi-home text-lg"></i>
+            <span class="hidden sm:inline">Go Home</span>
+          </button>
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 
     <div class="flex">
       <!-- Sidebar Overlay for Mobile -->
@@ -70,6 +71,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../../stores/authStore'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   activeTab: {
@@ -79,6 +81,7 @@ const props = defineProps({
 })
 
 
+const router = useRouter()
 const authStore = useAuthStore()
 const emit = defineEmits(['update:activeTab'])
 const userType = computed(() => authStore.userType)
@@ -106,5 +109,9 @@ const setActiveTab = (tabId) => {
   if (window.innerWidth < 1024) {
     sidebarOpen.value = false
   }
+}
+
+const goHome = () => {
+  router.push('/')
 }
 </script>

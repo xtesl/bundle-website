@@ -19,7 +19,7 @@
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             v-if="isAuthenticated">
+             v-if="isAuthenticated && userType != 'admin'">
             <i class="pi pi-list mr-2 text-base"></i>
             <span>My Orders</span>
         </RouterLink>
@@ -27,7 +27,7 @@
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
-             v-if="isAuthenticated">
+             v-if="isAuthenticated && userType != 'admin'">
             <i class="pi pi-receipt mr-2 text-base"></i>
             <span>Transactions</span>
         </RouterLink>
@@ -42,7 +42,7 @@
 
           
 
-          <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCI" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
@@ -60,7 +60,7 @@
         </RouterLink>
 
 
-          <RouterLink to="/user/profile" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <RouterLink to="/user/account" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
@@ -141,7 +141,7 @@
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
-           v-if="isAuthenticated">
+           v-if="isAuthenticated && userType != 'admin'">
           <i class="pi pi-list mr-3 text-base"></i>
           <span>My Orders</span>
       </RouterLink>
@@ -150,7 +150,7 @@
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
            @mouseout="$event.target.style.backgroundColor = 'transparent'"
-           v-if="isAuthenticated">
+           v-if="isAuthenticated && userType != 'admin'">
           <i class="pi pi-receipt mr-3 text-base"></i>
           <span>Transactions</span>
       </RouterLink>
@@ -167,7 +167,7 @@
 
        
 
-        <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+        <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCI" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
@@ -186,7 +186,7 @@
           <span>Become an Agent</span>
       </RouterLink>
 
-        <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+        <RouterLink to="/user/account" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
@@ -194,7 +194,7 @@
            v-if="isAuthenticated">
           <i class="pi pi-user-edit mr-3 text-base"></i>
           <span>My Account</span>
-        </a>
+    </RouterLink>
 
         <!-- <a href="#" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"

@@ -1,324 +1,351 @@
 <template>
   <div class="min-h-screen" style="background-color: #f3f2f2;">
+    <!-- Loading State -->
+    <div v-if="loading" class="min-h-screen flex items-center justify-center bg-gray-50">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+        <p class="text-gray-600">Loading storefront...</p>
+      </div>
+    </div>
 
-    <!-- Header Section -->
-    <div class="border-b" style="background-color: #0d000a; border-color: rgba(254, 221, 0, 0.2);">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex flex-col space-y-4">
-          <!-- Agent Info -->
-          <div v-if="agentInfo" class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl"
-                 style="background-color: #fedd00; color: #0d000a;">
-              {{ agentInfo.name?.charAt(0) || 'A' }}
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold tracking-tight" style="color: #f3f2f2;">
-                {{ agentInfo.name || 'Agent Store' }}
-              </h1>
-              <p class="mt-1 text-sm opacity-80 font-medium" style="color: #f3f2f2;">
-                Purchase data bundles at agent prices
-              </p>
-            </div>
+    <!-- Store Unavailable (Inactive) -->
+    <StoreUnavailable 
+      v-else-if="!loading && storefront && !storefront.is_active"
+      @retry="fetchStorefront"
+    />
+
+    <!-- Store Not Found -->
+    <div v-else-if="!loading && !storefront" class="min-h-screen flex items-center justify-center bg-gray-50">
+      <div class="max-w-md w-full text-center px-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="pi pi-exclamation-triangle text-4xl text-red-600"></i>
           </div>
-          
-          <!-- Loading State -->
-          <div v-else class="animate-pulse flex items-center gap-4">
-            <div class="w-16 h-16 rounded-full bg-gray-700"></div>
-            <div class="flex-1">
-              <div class="h-6 bg-gray-700 rounded w-48 mb-2"></div>
-              <div class="h-4 bg-gray-700 rounded w-64"></div>
-            </div>
-          </div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Store Not Found</h2>
+          <p class="text-gray-600 mb-6">The store you're looking for doesn't exist or has been removed.</p>
+          <button 
+            @click="$router.push('/')"
+            class="w-full px-6 py-3 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors flex items-center justify-center gap-2"
+          >
+            <i class="pi pi-home"></i>
+            Go Home
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        <!-- Left Column: Purchase Form -->
-        <div class="space-y-6">
-          <!-- Network Selection Card -->
-          <div class="rounded-md border border-opacity-20 overflow-hidden" 
-               style="background-color: #f3f2f2; border-color: #0d000a;">
-            <div class="px-6 py-4 border-b border-opacity-10" 
-                 style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-              <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
-                <i class="pi pi-wifi mr-2" style="color: #fedd00;"></i>
-                Select Network
-              </h2>
-            </div>
-            
-            <div class="p-6">
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <div v-for="network in networks" :key="network.id"
-                     @click="selectNetwork(network)"
-                     class="relative cursor-pointer border-2 rounded-lg p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                     :class="selectedNetwork?.id === network.id 
-                       ? 'border-yellow-400 bg-yellow-50 shadow-md ring-2 ring-yellow-200' 
-                       : 'border-gray-200 bg-white hover:border-gray-300'">
-                  
-                  <div class="relative w-full h-16 mb-3 flex items-center justify-center bg-gray-50 rounded-md overflow-hidden">
-                    <img v-if="network.logoUrl" 
-                         :src="network.logoUrl" 
-                         :alt="network.name"
-                         class="max-w-full max-h-full object-contain"
-                    />
-                    <div v-else 
-                         class="w-full h-full flex items-center justify-center rounded-md font-bold text-white text-xl"
-                         :style="{ backgroundColor: network.color }">
-                      {{ network.name?.charAt(0) }}
-                    </div>
-                    
-                    <div v-if="selectedNetwork?.id === network.id" 
-                         class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                      <i class="pi pi-check text-xs text-white"></i>
-                    </div>
-                  </div>
-                  
-                  <div class="text-center">
-                    <span class="text-sm font-medium text-gray-800">{{ network.name }}</span>
-                  </div>
-                </div>
+    <!-- Active Store Content -->
+    <div v-else-if="!loading && storefront && storefront.is_active">
+      <!-- Header Section -->
+      <div class="border-b" style="background-color: #0d000a; border-color: rgba(254, 221, 0, 0.2);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div class="flex flex-col space-y-4">
+            <!-- Agent Info -->
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl"
+                   style="background-color: #fedd00; color: #0d000a;">
+                {{ storefront.name?.charAt(0) || 'A' }}
               </div>
-            </div>
-          </div>
-
-          <!-- Phone Number Card -->
-          <div class="rounded-md border border-opacity-20 overflow-hidden" 
-               style="background-color: #f3f2f2; border-color: #0d000a;">
-            <div class="px-6 py-4 border-b border-opacity-10" 
-                 style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-              <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
-                <i class="pi pi-phone mr-2" style="color: #fedd00;"></i>
-                Beneficiary Number
-              </h2>
-            </div>
-            
-            <div class="p-6">
-              <div class="relative">
-                <input 
-                  v-model="beneficiaryNumber"
-                  type="tel"
-                  placeholder="0201234567"
-                  class="w-full px-4 py-3 rounded-md border border-opacity-20 transition-all"
-                  style="background-color: #f3f2f2; border-color: #0d000a; color: #0d000a;"
-                  @focus="$event.target.style.borderColor = '#fedd00'; $event.target.style.boxShadow = '0 0 0 2px rgba(254, 221, 0, 0.2)'"
-                  @blur="$event.target.style.borderColor = 'rgba(13, 0, 10, 0.2)'; $event.target.style.boxShadow = 'none'"
-                />
-                <div v-if="isValidPhone" class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <i class="pi pi-check-circle text-green-500"></i>
-                </div>
+              <div>
+                <h1 class="text-2xl font-bold tracking-tight" style="color: #f3f2f2;">
+                  {{ storefront.name || 'Agent Store' }}
+                </h1>
+                <p class="mt-1 text-sm opacity-80 font-medium" style="color: #f3f2f2;">
+                  Purchase data bundles at agent prices
+                </p>
               </div>
-              <p v-if="numberError" class="text-sm text-red-500 mt-2">{{ numberError }}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Right Column: Data Plans & Summary -->
-        <div class="space-y-6">
-          <!-- Data Plans Card -->
-          <div v-if="selectedNetwork" class="rounded-md border border-opacity-20 overflow-hidden" 
-               style="background-color: #f3f2f2; border-color: #0d000a;">
-            <div class="px-6 py-4 border-b border-opacity-10" 
-                 style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-              <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
-                <i class="pi pi-server mr-2" style="color: #fedd00;"></i>
-                Available Plans
-              </h2>
-            </div>
-            
-            <div class="p-6 max-h-96 overflow-y-auto space-y-3">
-              <div v-if="loadingPlans" class="space-y-3">
-                <div v-for="n in 3" :key="n" class="animate-pulse">
-                  <div class="h-20 bg-gray-200 rounded-lg"></div>
-                </div>
+      <!-- Main Content -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Left Column: Purchase Form -->
+          <div class="space-y-6">
+            <!-- Network Selection Card -->
+            <div class="rounded-md border border-opacity-20 overflow-hidden" 
+                 style="background-color: #f3f2f2; border-color: #0d000a;">
+              <div class="px-6 py-4 border-b border-opacity-10" 
+                   style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+                <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
+                  <i class="pi pi-wifi mr-2" style="color: #fedd00;"></i>
+                  Select Network
+                </h2>
               </div>
               
-              <div v-else-if="selectedNetwork.plans.length === 0" class="text-center py-8">
-                <i class="pi pi-inbox text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
-                <p class="text-sm opacity-60" style="color: #0d000a;">No plans available</p>
-              </div>
-              
-              <div v-else
-                   v-for="plan in selectedNetwork.plans" 
-                   :key="plan.id"
-                   @click="selectedPlan = plan"
-                   class="cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md"
-                   :class="selectedPlan?.id === plan.id ? 'border-yellow-400 bg-yellow-50 ring-2 ring-yellow-200' : 'border-gray-200 bg-white hover:border-gray-300'">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <h4 class="font-semibold text-base" style="color: #0d000a;">{{ plan.value }}</h4>
-                    <p class="text-xs opacity-60 mt-1" style="color: #0d000a;">{{ plan.duration }}</p>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="text-xl font-bold" style="color: #0d000a;">GH₵{{ plan.base_price }}</span>
-                    <div v-if="selectedPlan?.id === plan.id" 
-                         class="w-6 h-6 rounded-full flex items-center justify-center"
-                         style="background-color: #fedd00;">
-                      <i class="pi pi-check text-xs" style="color: #0d000a;"></i>
+              <div class="p-6">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div v-for="network in networks" :key="network.id"
+                       @click="selectNetwork(network)"
+                       class="relative cursor-pointer border-2 rounded-lg p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                       :class="selectedNetwork?.id === network.id 
+                         ? 'border-yellow-400 bg-yellow-50 shadow-md ring-2 ring-yellow-200' 
+                         : 'border-gray-200 bg-white hover:border-gray-300'">
+                    
+                    <div class="relative w-full h-16 mb-3 flex items-center justify-center bg-gray-50 rounded-md overflow-hidden">
+                      <img v-if="network.logoUrl" 
+                           :src="network.logoUrl" 
+                           :alt="network.name"
+                           class="max-w-full max-h-full object-contain"
+                      />
+                      <div v-else 
+                           class="w-full h-full flex items-center justify-center rounded-md font-bold text-white text-xl"
+                           :style="{ backgroundColor: network.color }">
+                        {{ network.name?.charAt(0) }}
+                      </div>
+                      
+                      <div v-if="selectedNetwork?.id === network.id" 
+                           class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                        <i class="pi pi-check text-xs text-white"></i>
+                      </div>
+                    </div>
+                    
+                    <div class="text-center">
+                      <span class="text-sm font-medium text-gray-800">{{ network.name }}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- Phone Number Card -->
+            <div class="rounded-md border border-opacity-20 overflow-hidden" 
+                 style="background-color: #f3f2f2; border-color: #0d000a;">
+              <div class="px-6 py-4 border-b border-opacity-10" 
+                   style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+                <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
+                  <i class="pi pi-phone mr-2" style="color: #fedd00;"></i>
+                  Beneficiary Number
+                </h2>
+              </div>
+              
+              <div class="p-6">
+                <div class="relative">
+                  <input 
+                    v-model="beneficiaryNumber"
+                    type="tel"
+                    placeholder="0201234567"
+                    class="w-full px-4 py-3 rounded-md border border-opacity-20 transition-all"
+                    style="background-color: #f3f2f2; border-color: #0d000a; color: #0d000a;"
+                    @focus="$event.target.style.borderColor = '#fedd00'; $event.target.style.boxShadow = '0 0 0 2px rgba(254, 221, 0, 0.2)'"
+                    @blur="$event.target.style.borderColor = 'rgba(13, 0, 10, 0.2)'; $event.target.style.boxShadow = 'none'"
+                  />
+                  <div v-if="isValidPhone" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <i class="pi pi-check-circle text-green-500"></i>
+                  </div>
+                </div>
+                <p v-if="numberError" class="text-sm text-red-500 mt-2">{{ numberError }}</p>
+              </div>
+            </div>
           </div>
 
-          <!-- Purchase Summary -->
-          <div class="rounded-md border border-opacity-20 overflow-hidden sticky top-8" 
-               style="background-color: #f3f2f2; border-color: #0d000a;">
-            <div class="px-6 py-4 border-b border-opacity-10" 
-                 style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-              <h3 class="text-lg font-semibold tracking-tight" style="color: #0d000a;">Order Summary</h3>
+          <!-- Right Column: Data Plans & Summary -->
+          <div class="space-y-6">
+            <!-- Data Plans Card -->
+            <div v-if="selectedNetwork" class="rounded-md border border-opacity-20 overflow-hidden" 
+                 style="background-color: #f3f2f2; border-color: #0d000a;">
+              <div class="px-6 py-4 border-b border-opacity-10" 
+                   style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+                <h2 class="text-lg font-semibold tracking-tight flex items-center" style="color: #0d000a;">
+                  <i class="pi pi-server mr-2" style="color: #fedd00;"></i>
+                  Available Plans
+                </h2>
+              </div>
+              
+              <div class="p-6 max-h-96 overflow-y-auto space-y-3">
+                <div v-if="loadingPlans" class="space-y-3">
+                  <div v-for="n in 3" :key="n" class="animate-pulse">
+                    <div class="h-20 bg-gray-200 rounded-lg"></div>
+                  </div>
+                </div>
+                
+                <div v-else-if="selectedNetwork.plans.length === 0" class="text-center py-8">
+                  <i class="pi pi-inbox text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
+                  <p class="text-sm opacity-60" style="color: #0d000a;">No plans available</p>
+                </div>
+                
+                <div v-else
+                     v-for="plan in selectedNetwork.plans" 
+                     :key="plan.id"
+                     @click="selectedPlan = plan"
+                     class="cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md"
+                     :class="selectedPlan?.id === plan.id ? 'border-yellow-400 bg-yellow-50 ring-2 ring-yellow-200' : 'border-gray-200 bg-white hover:border-gray-300'">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h4 class="font-semibold text-base" style="color: #0d000a;">{{ plan.value }}</h4>
+                      <p class="text-xs opacity-60 mt-1" style="color: #0d000a;">{{ plan.duration }}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-xl font-bold" style="color: #0d000a;">GH₵{{ plan.base_price }}</span>
+                      <div v-if="selectedPlan?.id === plan.id" 
+                           class="w-6 h-6 rounded-full flex items-center justify-center"
+                           style="background-color: #fedd00;">
+                        <i class="pi pi-check text-xs" style="color: #0d000a;"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="p-6 space-y-4">
-              <div v-if="selectedNetwork" class="flex justify-between py-2">
-                <span class="text-sm opacity-70" style="color: #0d000a;">Network</span>
-                <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedNetwork.name }}</span>
+            <!-- Purchase Summary -->
+            <div class="rounded-md border border-opacity-20 overflow-hidden sticky top-8" 
+                 style="background-color: #f3f2f2; border-color: #0d000a;">
+              <div class="px-6 py-4 border-b border-opacity-10" 
+                   style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+                <h3 class="text-lg font-semibold tracking-tight" style="color: #0d000a;">Order Summary</h3>
               </div>
 
-              <div v-if="beneficiaryNumber && isValidPhone" class="flex justify-between py-2">
-                <span class="text-sm opacity-70" style="color: #0d000a;">Number</span>
-                <span class="text-sm font-medium" style="color: #0d000a;">{{ beneficiaryNumber }}</span>
+              <div class="p-6 space-y-4">
+                <div v-if="selectedNetwork" class="flex justify-between py-2">
+                  <span class="text-sm opacity-70" style="color: #0d000a;">Network</span>
+                  <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedNetwork.name }}</span>
+                </div>
+
+                <div v-if="beneficiaryNumber && isValidPhone" class="flex justify-between py-2">
+                  <span class="text-sm opacity-70" style="color: #0d000a;">Number</span>
+                  <span class="text-sm font-medium" style="color: #0d000a;">{{ beneficiaryNumber }}</span>
+                </div>
+
+                <div v-if="selectedPlan" class="flex justify-between py-2">
+                  <span class="text-sm opacity-70" style="color: #0d000a;">Data</span>
+                  <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedPlan.value }}</span>
+                </div>
+
+                <div v-if="selectedPlan" class="flex justify-between py-2">
+                  <span class="text-sm opacity-70" style="color: #0d000a;">Validity</span>
+                  <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedPlan.duration }}</span>
+                </div>
+
+                <hr v-if="selectedPlan" class="border-opacity-10" style="border-color: #0d000a;">
+
+                <div v-if="selectedPlan" class="flex justify-between py-2">
+                  <span class="font-semibold" style="color: #0d000a;">Total</span>
+                  <span class="text-xl font-bold" style="color: #0d000a;">GH₵{{ selectedPlan.base_price }}</span>
+                </div>
+
+                <div v-if="!selectedNetwork || !selectedPlan" class="text-center py-8">
+                  <i class="pi pi-shopping-cart text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
+                  <p class="text-sm opacity-60" style="color: #0d000a;">
+                    Complete the form to see summary
+                  </p>
+                </div>
+
+                <button 
+                  @click="purchaseData"
+                  :disabled="!canPurchase"
+                  class="w-full py-4 rounded-md font-semibold transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                  :style="{
+                    backgroundColor: canPurchase ? '#fedd00' : 'rgba(254, 221, 0, 0.3)',
+                    color: '#0d000a'
+                  }">
+                  <i class="pi pi-shopping-cart mr-2"></i>
+                  <span v-if="!processing">
+                    {{ selectedPlan ? `Purchase for GH₵${selectedPlan.base_price}` : 'Complete form' }}
+                  </span>
+                  <span v-else>Processing...</span>
+                </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div v-if="selectedPlan" class="flex justify-between py-2">
-                <span class="text-sm opacity-70" style="color: #0d000a;">Data</span>
-                <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedPlan.value }}</span>
+      <!-- Success Modal -->
+      <div v-if="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+           style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="rounded-xl shadow-2xl max-w-md w-full" style="background-color: #f3f2f2;">
+          <div class="p-6 text-center">
+            <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" 
+                 style="background-color: rgba(34, 197, 94, 0.1);">
+              <i class="pi pi-check text-2xl text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" style="color: #0d000a;">Purchase Successful!</h3>
+            <p class="text-sm opacity-70 mb-6" style="color: #0d000a;">
+              Data bundle sent to {{ beneficiaryNumber }}
+            </p>
+            <button @click="closeSuccessModal" 
+                    class="w-full py-3 rounded-lg font-semibold"
+                    style="background-color: #fedd00; color: #0d000a;">
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Up Modal -->
+      <div v-if="showTopUpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+           style="background-color: rgba(0, 0, 0, 0.5);" @click.self="showTopUpModal = false">
+        <div class="rounded-xl shadow-2xl max-w-md w-full" style="background-color: #f3f2f2;">
+          <div class="px-6 py-4 border-b border-opacity-10 flex items-center justify-between" 
+               style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+            <h3 class="text-xl font-bold tracking-tight" style="color: #0d000a;">Top Up Wallet</h3>
+            <button @click="showTopUpModal = false" class="text-gray-500 hover:text-gray-700">
+              <i class="pi pi-times text-lg"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold mb-2" style="color: #0d000a;">Amount (GH₵)</label>
+                <input 
+                  v-model="topUpAmount"
+                  type="number"
+                  placeholder="Enter amount"
+                  class="w-full px-4 py-3 rounded-md border border-opacity-20"
+                  style="background-color: #f3f2f2; border-color: #0d000a; color: #0d000a;"
+                />
               </div>
-
-              <div v-if="selectedPlan" class="flex justify-between py-2">
-                <span class="text-sm opacity-70" style="color: #0d000a;">Validity</span>
-                <span class="text-sm font-medium" style="color: #0d000a;">{{ selectedPlan.duration }}</span>
-              </div>
-
-              <hr v-if="selectedPlan" class="border-opacity-10" style="border-color: #0d000a;">
-
-              <div v-if="selectedPlan" class="flex justify-between py-2">
-                <span class="font-semibold" style="color: #0d000a;">Total</span>
-                <span class="text-xl font-bold" style="color: #0d000a;">GH₵{{ selectedPlan.base_price }}</span>
-              </div>
-
-              <div v-if="!selectedNetwork || !selectedPlan" class="text-center py-8">
-                <i class="pi pi-shopping-cart text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
-                <p class="text-sm opacity-60" style="color: #0d000a;">
-                  Complete the form to see summary
-                </p>
-              </div>
-
               <button 
-                @click="purchaseData"
-                :disabled="!canPurchase"
-                class="w-full py-4 rounded-md font-semibold transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                :style="{
-                  backgroundColor: canPurchase ? '#fedd00' : 'rgba(254, 221, 0, 0.3)',
-                  color: '#0d000a'
-                }">
-                <i class="pi pi-shopping-cart mr-2"></i>
-                <span v-if="!processing">
-                  {{ selectedPlan ? `Purchase for GH₵${selectedPlan.base_price}` : 'Complete form' }}
-                </span>
-                <span v-else>Processing...</span>
+                @click="processTopUp"
+                :disabled="!topUpAmount || topUpAmount <= 0"
+                class="w-full py-3 rounded-lg font-semibold disabled:opacity-50"
+                style="background-color: #fedd00; color: #0d000a;">
+                Confirm Top Up
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Success Modal -->
-    <div v-if="showSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
-         style="background-color: rgba(0, 0, 0, 0.5);">
-      <div class="rounded-xl shadow-2xl max-w-md w-full" style="background-color: #f3f2f2;">
-        <div class="p-6 text-center">
-          <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" 
-               style="background-color: rgba(34, 197, 94, 0.1);">
-            <i class="pi pi-check text-2xl text-green-600"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-2" style="color: #0d000a;">Purchase Successful!</h3>
-          <p class="text-sm opacity-70 mb-6" style="color: #0d000a;">
-            Data bundle sent to {{ beneficiaryNumber }}
-          </p>
-          <button @click="closeSuccessModal" 
-                  class="w-full py-3 rounded-lg font-semibold"
-                  style="background-color: #fedd00; color: #0d000a;">
-            Done
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Top Up Modal -->
-    <div v-if="showTopUpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
-         style="background-color: rgba(0, 0, 0, 0.5);" @click.self="showTopUpModal = false">
-      <div class="rounded-xl shadow-2xl max-w-md w-full" style="background-color: #f3f2f2;">
-        <div class="px-6 py-4 border-b border-opacity-10 flex items-center justify-between" 
-             style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-          <h3 class="text-xl font-bold tracking-tight" style="color: #0d000a;">Top Up Wallet</h3>
-          <button @click="showTopUpModal = false" class="text-gray-500 hover:text-gray-700">
-            <i class="pi pi-times text-lg"></i>
-          </button>
-        </div>
-        <div class="p-6">
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-semibold mb-2" style="color: #0d000a;">Amount (GH₵)</label>
-              <input 
-                v-model="topUpAmount"
-                type="number"
-                placeholder="Enter amount"
-                class="w-full px-4 py-3 rounded-md border border-opacity-20"
-                style="background-color: #f3f2f2; border-color: #0d000a; color: #0d000a;"
-              />
-            </div>
-            <button 
-              @click="processTopUp"
-              :disabled="!topUpAmount || topUpAmount <= 0"
-              class="w-full py-3 rounded-lg font-semibold disabled:opacity-50"
-              style="background-color: #fedd00; color: #0d000a;">
-              Confirm Top Up
+      <!-- Transaction History Modal -->
+      <div v-if="showHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+           style="background-color: rgba(0, 0, 0, 0.5);" @click.self="showHistoryModal = false">
+        <div class="rounded-xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden" style="background-color: #f3f2f2;">
+          <div class="px-6 py-4 border-b border-opacity-10 flex items-center justify-between" 
+               style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+            <h3 class="text-xl font-bold tracking-tight" style="color: #0d000a;">Transaction History</h3>
+            <button @click="showHistoryModal = false" class="text-gray-500 hover:text-gray-700">
+              <i class="pi pi-times text-lg"></i>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Transaction History Modal -->
-    <div v-if="showHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" 
-         style="background-color: rgba(0, 0, 0, 0.5);" @click.self="showHistoryModal = false">
-      <div class="rounded-xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden" style="background-color: #f3f2f2;">
-        <div class="px-6 py-4 border-b border-opacity-10 flex items-center justify-between" 
-             style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-          <h3 class="text-xl font-bold tracking-tight" style="color: #0d000a;">Transaction History</h3>
-          <button @click="showHistoryModal = false" class="text-gray-500 hover:text-gray-700">
-            <i class="pi pi-times text-lg"></i>
-          </button>
-        </div>
-        <div class="p-6 overflow-y-auto max-h-[60vh]">
-          <div v-if="transactionHistory.length === 0" class="text-center py-8">
-            <i class="pi pi-history text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
-            <p class="text-sm opacity-60" style="color: #0d000a;">No transactions yet</p>
-          </div>
-          <div v-else class="space-y-4">
-            <div v-for="transaction in transactionHistory" :key="transaction.id" 
-                 class="flex items-center justify-between p-4 rounded-lg border border-opacity-10"
-                 style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
-              <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3"
-                     :style="{ backgroundColor: transaction.type === 'purchase' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)' }">
-                  <i :class="transaction.type === 'purchase' ? 'pi pi-shopping-cart text-red-600' : 'pi pi-plus text-green-600'"></i>
+          <div class="p-6 overflow-y-auto max-h-[60vh]">
+            <div v-if="transactionHistory.length === 0" class="text-center py-8">
+              <i class="pi pi-history text-3xl opacity-30 mb-3" style="color: #0d000a;"></i>
+              <p class="text-sm opacity-60" style="color: #0d000a;">No transactions yet</p>
+            </div>
+            <div v-else class="space-y-4">
+              <div v-for="transaction in transactionHistory" :key="transaction.id" 
+                   class="flex items-center justify-between p-4 rounded-lg border border-opacity-10"
+                   style="background-color: rgba(13, 0, 10, 0.02); border-color: #0d000a;">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3"
+                       :style="{ backgroundColor: transaction.type === 'purchase' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)' }">
+                    <i :class="transaction.type === 'purchase' ? 'pi pi-shopping-cart text-red-600' : 'pi pi-plus text-green-600'"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-sm" style="color: #0d000a;">{{ transaction.description }}</p>
+                    <p class="text-xs opacity-60" style="color: #0d000a;">{{ transaction.date }}</p>
+                  </div>
                 </div>
-                <div>
-                  <p class="font-semibold text-sm" style="color: #0d000a;">{{ transaction.description }}</p>
-                  <p class="text-xs opacity-60" style="color: #0d000a;">{{ transaction.date }}</p>
-                </div>
+                <span class="font-bold text-sm" 
+                      :style="{ color: transaction.type === 'purchase' ? '#ef4444' : '#22c55e' }">
+                  {{ transaction.type === 'purchase' ? '-' : '+' }}GH₵{{ transaction.amount }}
+                </span>
               </div>
-              <span class="font-bold text-sm" 
-                    :style="{ color: transaction.type === 'purchase' ? '#ef4444' : '#22c55e' }">
-                {{ transaction.type === 'purchase' ? '-' : '+' }}GH₵{{ transaction.amount }}
-              </span>
             </div>
           </div>
         </div>
@@ -332,14 +359,14 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import apiClient from "../api/axios"
 import PaystackPop from '@paystack/inline-js'
-
-
+import StoreUnavailable from '../components/StoreUnavailable.vue'
 
 const popup = new PaystackPop()
 const route = useRoute()
 const slug = computed(() => route.params.slug)
 
-const agentInfo = ref(null)
+const loading = ref(true)
+const storefront = ref(null)
 const networks = ref([])
 const selectedNetwork = ref(null)
 const selectedPlan = ref(null)
@@ -393,14 +420,18 @@ const canPurchase = computed(() => {
          !processing.value
 })
 
-const fetchAgentInfo = async () => {
+const fetchStorefront = async () => {
+  loading.value = true
   try {
     const response = await apiClient.get(`/management/storefronts/${slug.value}`)
-    agentInfo.value = response.data
-    // Fetch wallet balance
-    await fetchWalletBalance()
+    if (response.status === 200 && response.data) {
+      storefront.value = response.data
+    }
   } catch (error) {
-    console.error('Error fetching agent info:', error)
+    console.error('Error fetching storefront:', error)
+    storefront.value = null
+  } finally {
+    loading.value = false
   }
 }
 
@@ -474,10 +505,6 @@ const purchaseData = async () => {
     
     if (response.status === 200) {
       popup.resumeTransaction(response.data.data.access_code)
-      // showSuccessModal.value = true
-      // await fetchWalletBalance()
-      // await fetchTransactionHistory()
-      // resetForm()
     }
   } catch (error) {
     alert('Purchase failed. Please try again.')
@@ -528,10 +555,11 @@ watch(showHistoryModal, (newVal) => {
 })
 
 onMounted(() => {
-  fetchAgentInfo()
+  fetchStorefront()
   fetchNetworks()
 })
 </script>
+
 
 <style scoped>
 button {
