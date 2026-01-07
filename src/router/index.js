@@ -42,13 +42,13 @@ const routes = [
     path: '/user/account',
     name: 'account',
     component: () => import('../views/UserAccount.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, allowAdmin: true }
   },
   {
     path: '/admin/dashboard',
     name: 'AdminDashboard',
     component: () => import('../views/AdminDashboard.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresRole: 'admin' }
   },
   {
     path: '/auth/register-agent',
@@ -81,6 +81,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.meta.requiresAuth
   const requiresGuest = to.meta.requiresGuest
   const requiresRole = to.meta.requiresRole
+  const allowAdmin = to.meta.allowAdmin
 
   // Redirect to login if route requires authentication and user is not authenticated
   if (requiresAuth && !authStore.isAuthenticated) {
@@ -89,12 +90,25 @@ router.beforeEach(async (to, from, next) => {
 
   // Redirect to home if route requires guest and user is authenticated
   if (requiresGuest && authStore.isAuthenticated) {
+    // If admin trying to access guest pages, send to admin dashboard
+    if (authStore.userType === 'admin') {
+      return next({ name: 'AdminDashboard' })
+    }
     return next({ name: 'home' })
   }
 
   // Check role-based access
   if (requiresRole && authStore.userType !== requiresRole) {
     return next({ name: 'home' })
+  }
+
+  // Admin restrictions: only allow dashboard and account pages
+  if (authStore.userType === 'admin') {
+    const allowedAdminRoutes = ['AdminDashboard', 'account', 'login', 'register']
+    
+    if (!allowedAdminRoutes.includes(to.name)) {
+      return next({ name: 'AdminDashboard' })
+    }
   }
 
   next()

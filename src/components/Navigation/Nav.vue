@@ -4,18 +4,33 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <!-- Logo/Brand -->
-        <div class="flex items-center">
-          <div class="flex-shrink-0 flex items-center">
-            <h1 class="text-xl font-bold tracking-tight" style="color: #fedd00;">
-              KingdomDataGh
-            </h1>
-          </div>
-        </div>
+      <div class="flex items-center">
+  <div class="flex-shrink-0 flex items-center gap-3">
+    <div class="relative group">
+      <img 
+        src="https://i.postimg.cc/wjXFgJnM/IMG-20260107-WA0050-1-removebg-preview.png" 
+        alt="Kingdom Data Ghana" 
+        class="w-12 h-12 object-contain transition-transform duration-300 group-hover:scale-105"
+      />
+    </div>
+    <h1 class="text-xl font-bold tracking-tight" style="color: #fedd00;">
+      KingdomDataGh
+    </h1>
+  </div>
+</div>
 
         <!-- Desktop Navigation -->
         <div class="hidden xl:flex xl:items-center xl:space-x-1">
         
-          <RouterLink to="/user/orders" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <RouterLink to="/" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+             style="color: #f3f2f2;"
+             @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
+             @mouseout="$event.target.style.backgroundColor = 'transparent'"
+             v-if="isAuthenticated && userType != 'admin'">
+            <i class="pi pi-shopping-bag mr-2 text-base"></i>
+            <span>Buy Data</span>
+        </RouterLink>
+         <RouterLink to="/user/orders" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
@@ -42,7 +57,7 @@
 
           
 
-          <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCI" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
+          <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCl" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200" 
              style="color: #f3f2f2;"
              @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
              @mouseout="$event.target.style.backgroundColor = 'transparent'"
@@ -136,7 +151,16 @@
       <div class="pt-2 pb-3 space-y-1">
 
     
-       <RouterLink to="/user/orders" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+       <RouterLink to="/" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+           style="color: #f3f2f2;"
+           @click="toggleMobileMenu"
+           @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
+           @mouseout="$event.target.style.backgroundColor = 'transparent'"
+           v-if="isAuthenticated && userType != 'admin'">
+          <i class="pi pi-shopping-bag mr-3 text-base"></i>
+          <span>Buy Data</span>
+      </RouterLink>
+      <RouterLink to="/user/orders" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"
@@ -167,7 +191,7 @@
 
        
 
-        <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCI" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
+        <a href="https://chat.whatsapp.com/EQgSEw6jSBgK1cNfZKzZCl" class="flex items-center pl-3 pr-4 py-3 text-base font-medium transition-colors duration-200" 
            style="color: #f3f2f2;"
            @click="toggleMobileMenu"
            @mouseover="$event.target.style.backgroundColor = 'rgba(254, 221, 0, 0.1)'"

@@ -1,9 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <title>Kingdom Data Ghana | Affordable Data Prices</title>
   <style>
     /* Loading Screen Styles */
@@ -33,21 +36,38 @@
     }
 
     .loading-logo {
-      width: 80px;
-      height: 80px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
+      width: 90px;
+      height: 90px;
+      background: transparent;
       border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 24px;
       animation: pulse 2s ease-in-out infinite;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .loading-logo i {
-      font-size: 40px;
-      color: #1f2937;
+    .loading-logo::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #fbbf24, #f59e0b, #fbbf24);
+      border-radius: 22px;
+      z-index: -1;
+      animation: rotate 3s linear infinite;
+    }
+
+    .loading-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 18px;
     }
 
     .loading-spinner {
@@ -61,27 +81,29 @@
     }
 
     .loading-text {
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: 700;
       margin-bottom: 8px;
       color: #1f2937;
+      letter-spacing: 0.5px;
     }
 
     .loading-subtext {
-      font-size: 14px;
+      font-size: 15px;
       color: #374151;
-      opacity: 0.8;
+      opacity: 0.9;
+      font-weight: 500;
     }
 
     .loading-dots {
       display: inline-flex;
-      gap: 4px;
-      margin-left: 4px;
+      gap: 5px;
+      margin-left: 6px;
     }
 
     .loading-dots span {
-      width: 4px;
-      height: 4px;
+      width: 5px;
+      height: 5px;
       background: #1f2937;
       border-radius: 50%;
       animation: bounce 1.4s ease-in-out infinite;
@@ -101,14 +123,18 @@
       }
     }
 
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
-        opacity: 1;
       }
       50% {
-        transform: scale(1.05);
-        opacity: 0.8;
+        transform: scale(1.08);
       }
     }
 
@@ -117,7 +143,25 @@
         transform: translateY(0);
       }
       40% {
-        transform: translateY(-8px);
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .loading-logo {
+        width: 75px;
+        height: 75px;
+        padding: 8px;
+      }
+
+      .loading-text {
+        font-size: 20px;
+      }
+
+      .loading-spinner {
+        width: 45px;
+        height: 45px;
       }
     }
   </style>
@@ -127,7 +171,7 @@
   <div id="app-loading">
     <div class="loading-content">
       <div class="loading-logo">
-        <i class="pi pi-shopping-bag"></i>
+        <img src="https://i.postimg.cc/wjXFgJnM/IMG-20260107-WA0050-1-removebg-preview.png" alt="Kingdom Data Ghana Logo">
       </div>
       <div class="loading-spinner"></div>
       <div class="loading-text">

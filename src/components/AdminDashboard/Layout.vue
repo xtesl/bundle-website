@@ -15,13 +15,22 @@
           </button>
           <h1 class="text-xl font-bold text-yellow-400">Admin Control</h1>
         </div>
-        <div class="flex items-center">
+        <div v-if="userType === 'agent'" class="flex items-center">
           <button 
             @click="goHome"
             class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
           >
             <i class="pi pi-home text-lg"></i>
             <span class="hidden sm:inline">Go Home</span>
+          </button>
+        </div>
+        <div v-else class="flex items-center">
+          <button 
+            @click="onLogout"
+            class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+          >
+            <i class="pi pi-sign-out text-lg"></i>
+            <span class="hidden sm:inline">Logout</span>
           </button>
         </div>
       </div>
@@ -113,5 +122,13 @@ const setActiveTab = (tabId) => {
 
 const goHome = () => {
   router.push('/')
+}
+const onLogout = async () => {
+  try{
+    await authStore.logout()
+    router.push('/auth/login')
+  }catch(err){
+  }
+     
 }
 </script>
